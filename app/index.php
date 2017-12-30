@@ -10,7 +10,7 @@ if($debug)
 
 # result or crawl
 
-if(is_array($_GET) && array_key_exists('action',$_GET) && $_GET['action'] == 'crawl')
+if(is_array($_GET) && array_key_exists('action', $_GET) && $_GET['action'] == 'crawl')
 {
   processData();
 }
