@@ -1,0 +1,45 @@
+version: "3"
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - "./etc/nginx:/etc/nginx/conf.d"
+      - "./app:/var/www/html"
+    links:
+      - php
+    restart: always
+  php:
+    build: dockerfiles/php
+    volumes:
+      - "./etc/php/fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf"
+      - "./etc/php/php.ini:/usr/local/etc/php/php.ini"
+      - "./app:/var/www/html"
+    links:
+      - mariadb
+    restart: always
+  mariadb:
+    image: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./data/mysql:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=db
+      - MYSQL_PASSWORD=db
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8183:80
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_USERNAME: db
+      MYSQL_ROOT_PASSWORD: db
+      PMA_ARBITRARY: 1
+    restart: always
