@@ -28,18 +28,17 @@ function processData()
   // read IDs
   $idstodo = array(
     4151,
-    4131,
+    4131
   );
 
   // do the job
-  $processed = array();
-  $result = array();
+  $calculated = new StdClass();
+  $result = new StdClass();
 
   foreach($idstodo as $id)
   {
-    //$processed = getData($id);
-    //$result[] = calculateData($processed);
-    $result[] = calculateData(getData($id));
+    $calculated = calculateData(getData($id));
+    $result->{$id} = $calculated->item;
   }
 
   saveResult($result);
@@ -58,7 +57,7 @@ function showResult()
   {
       if($jsondata = file_get_contents($file))
       {
-        echo $jsondata;
+        // echo $jsondata;
       }
       else
       {
@@ -69,6 +68,15 @@ function showResult()
   {
     echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
   }
+
+  require_once('view/tpl/header.php');
+
+  require_once('view/viewhtml.php');
+  $out = new viewhtml;
+  echo $out->viewlist(json_decode($jsondata));
+
+  require_once('view/tpl/footer.php');
+
 }
 
 # do crawl
@@ -77,7 +85,6 @@ function getData($itemID)
 {
   $baseurl = 'http://services.runescape.com/m=itemdb_oldschool/';
   $itemuri = 'api/catalogue/detail.json?item=' . $itemID;
-  // $url = urlencode($baseurl . $itemuri);
   $url = $baseurl . $itemuri;
   $jsondata = '';
 
@@ -102,28 +109,27 @@ function getData($itemID)
 }
 
 // do the math
-function calculateData($resultarray)
+function calculateData($resultobject)
 {
-  $newarray = array();
+  $newobject = new StdClass();
+  $id = $resultobject->item->id;
 
-  // $newarray[] = $resultarray;
-
-  switch($resultarray->item->id)
+  switch($id)
   {
     case 4151:
-      $newarray[] = $resultarray;
+      //$newarray[$id] = $resultarray;
       break;
 
     case 4131:
-      $newarray[] = $resultarray;
+      //$newarray[$id] = $resultarray;
       break;
 
     default:
-      $newarray[] = $resultarray;
+      //$newarray[$id] = $resultarray;
       break;
   }
 
-  return $newarray;
+  return $resultobject;
 }
 
 // store data
