@@ -129,9 +129,6 @@ function calculateData($resultarray)
 // store data
 function saveResult($result)
 {
-  print_r($result);
-  exit;
-
   $jsonresult = json_encode($result, JSON_PRETTY_PRINT);
   global $file;
 
