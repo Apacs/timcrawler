@@ -4,6 +4,8 @@ class viewhtml
 {
     public function viewlist($dataobject)
     {
+      require_once('view/tpl/header.php');
+
       $html = '<h1>Datenbestand</h1>';
       $html .= '<p>Eine pure Liste aller Objekte, die die Software gemäß Konfiguration abfragt und, sofern angegeben, die Preise berechnet.</p>';
 
@@ -14,7 +16,7 @@ class viewhtml
                   <th>Name</th>
                   <th>Description</th>
                   <th>Current Price (calculated)</th>
-                </tr></thead>';
+                </tr></thead><tbody>';
 
       foreach ($dataobject as $id => $item)
       {
@@ -29,8 +31,12 @@ class viewhtml
         $html .= '</tr>';
       }
 
-      $html .= '</table>';
+      $html .= '</tbody></table>';
 
-      return $html;
+      echo $html;
+
+      require_once('view/tpl/footer.php');
+
+      return true;
     }
 }
