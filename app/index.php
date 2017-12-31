@@ -43,15 +43,16 @@ function processData()
   $item = new StdClass();
   $items = new StdClass();
 
+  $startzeit = microtime(true);
+
   foreach($idstodo as $id)
   {
-    //$calculated = calculateData(getData($id));
-    //$result->{'item' . $id} = $calculated->item;
-
     $item = getData($id);
     $item = price2Int($item);
     $items->{'item' . $id} = $item->item;
   }
+
+  echo '<br />Dauer: ' . (microtime(true) - $startzeit) . '<br>';
 
   $items = calculateData($items);
   saveItems($items);
@@ -100,7 +101,7 @@ function getData($itemID)
   {
     if($jsondata = file_get_contents($url))
     {
-        echo 'Daten von API abgefragt.<br />';
+        echo 'Daten von API für ID ' . $itemID . ' abgefragt.<br />';
         // @TODO: validate response
     }
     else
