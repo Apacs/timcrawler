@@ -1,5 +1,7 @@
 <?php
 
+require_once('models/model.php');
+
 $debug = true;
 $file = '/var/www/html/result.json';
 
@@ -26,16 +28,8 @@ exit;
 function processData()
 {
   // read IDs
-  $idstodo = array(
-    4151,
-    4131,
-    5096,
-    8784,
-    442,
-    11810
-  );
-
-  asort($idstodo);
+  $dat = new model;
+  $idstodo = json_decode($dat->getids());
 
   // do the job
   $item = new StdClass();
@@ -81,7 +75,7 @@ function showResult()
     echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
   }
 
-  require_once('view/view.php');
+  require_once('views/view.php');
   $out = new view;
   $out->viewlist(json_decode($jsondata));
 
