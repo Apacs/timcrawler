@@ -82,14 +82,9 @@ function showResult()
     echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
   }
 
-  require_once('view/tpl/header.php');
-
   require_once('view/viewhtml.php');
   $out = new viewhtml;
-  echo $out->viewlist(json_decode($jsondata));
-
-  require_once('view/tpl/footer.php');
-
+  $out->viewlist(json_decode($jsondata));
 }
 
 # do crawl
