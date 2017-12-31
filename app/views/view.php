@@ -4,12 +4,12 @@ class view
 {
     function __construct()
     {
-      require_once('view/tpl/header.php');
+      require_once('views/tpl/header.php');
     }
 
     function __destruct()
     {
-      require_once('view/tpl/footer.php');
+      require_once('views/tpl/footer.php');
     }
 
     public function viewlist($dataobject)

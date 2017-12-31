@@ -1,9 +1,9 @@
 <?php
 
 require_once('models/model.php');
+require_once('views/view.php');
 
 $debug = true;
-$file = '/var/www/html/result.json';
 
 if($debug)
 {
@@ -56,28 +56,11 @@ function processData()
 
 function showResult()
 {
-  global $file;
-  $jsondata = '';
+  $data = new model;
+  $jsondata = json_decode($data->getdata());
 
-  try
-  {
-      if($jsondata = file_get_contents($file))
-      {
-        // echo $jsondata;
-      }
-      else
-      {
-        throw new Exception('Daten konnten nicht von ' . $file . ' gelesen werden');
-      }
-  }
-  catch(Exception $e)
-  {
-    echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
-  }
-
-  require_once('views/view.php');
   $out = new view;
-  $out->viewlist(json_decode($jsondata));
+  $out->viewlist($jsondata);
 
   return true;
 }
@@ -86,27 +69,8 @@ function showResult()
 
 function getData($itemID)
 {
-  $baseurl = 'http://services.runescape.com/m=itemdb_oldschool/';
-  $itemuri = 'api/catalogue/detail.json?item=' . $itemID;
-  $url = $baseurl . $itemuri;
-  $jsondata = '';
-
-  try
-  {
-    if($jsondata = file_get_contents($url))
-    {
-        echo 'Daten von API für ID ' . $itemID . ' abgefragt.<br />';
-        // @TODO: validate response
-    }
-    else
-    {
-      throw new Exception('Daten konnten nicht von ' . $url . ' gabgefragt werden');
-    }
-  }
-  catch(Exception $e)
-  {
-    echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
-  }
+  $api = new model;
+  $jsondata = $api->getitems($itemID);
 
   return json_decode($jsondata);
 }
@@ -175,25 +139,8 @@ function price2Int($item)
 // store data
 function saveItems($result)
 {
-  $jsonresult = json_encode($result, JSON_PRETTY_PRINT);
-  global $file;
-
-  try
-  {
-    if(file_put_contents($file, $jsonresult))
-    {
-      echo 'Ergebnis gespeichert.<br />';
-    }
-    else {
-      {
-        throw new Exception('Ergebnis konnte nicht in ' . $file . ' gespeichert werden');
-      }
-    }
-    }
-  catch(Exception $e)
-  {
-    echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
-  }
+  $data = new model;
+  $data->savedata($result);
 
   return true;
 }
