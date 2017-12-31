@@ -1,11 +1,19 @@
 <?php
 
-class viewhtml
+class view
 {
-    public function viewlist($dataobject)
+    function __construct()
     {
       require_once('view/tpl/header.php');
+    }
 
+    function __destruct()
+    {
+      require_once('view/tpl/footer.php');
+    }
+
+    public function viewlist($dataobject)
+    {
       $html = '<h1>Datenbestand</h1>';
       $html .= '<p>Eine pure Liste aller Objekte, die die Software gemäß Konfiguration abfragt und, sofern angegeben, die Preise berechnet.</p>';
 
@@ -34,8 +42,6 @@ class viewhtml
       $html .= '</tbody></table>';
 
       echo $html;
-
-      require_once('view/tpl/footer.php');
 
       return true;
     }

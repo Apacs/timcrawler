@@ -31,15 +31,13 @@ function processData()
     4131,
     5096,
     8784,
-    442
+    442,
+    11810
   );
 
   asort($idstodo);
 
   // do the job
-  $calculated = new StdClass();
-  $result = new StdClass();
-
   $item = new StdClass();
   $items = new StdClass();
 
@@ -83,9 +81,11 @@ function showResult()
     echo $e->getMessage() . ' in ' . $e->getFile() . ', Zeile: ' . $e->getLine() . '.';
   }
 
-  require_once('view/viewhtml.php');
-  $out = new viewhtml;
+  require_once('view/view.php');
+  $out = new view;
   $out->viewlist(json_decode($jsondata));
+
+  return true;
 }
 
 # do crawl
@@ -121,7 +121,6 @@ function getData($itemID)
 function calculateData($items)
 {
   $newobject = new StdClass();
-  //$id = $items->item->id;
 
   foreach($items as $item)
   {
