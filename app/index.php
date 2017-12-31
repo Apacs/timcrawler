@@ -8,7 +8,7 @@ if($debug)
   error_reporting(E_ALL);
 }
 
-# result or crawl
+// result or crawl
 
 if(is_array($_GET) && array_key_exists('action', $_GET) && $_GET['action'] == 'crawl')
 {
@@ -28,20 +28,33 @@ function processData()
   // read IDs
   $idstodo = array(
     4151,
-    4131
+    4131,
+    5096,
+    8784,
+    442
   );
+
+  asort($idstodo);
 
   // do the job
   $calculated = new StdClass();
   $result = new StdClass();
 
+  $item = new StdClass();
+  $items = new StdClass();
+
   foreach($idstodo as $id)
   {
-    $calculated = calculateData(getData($id));
-    $result->{$id} = $calculated->item;
+    //$calculated = calculateData(getData($id));
+    //$result->{'item' . $id} = $calculated->item;
+
+    $item = getData($id);
+    $item = price2Int($item);
+    $items->{'item' . $id} = $item->item;
   }
 
-  saveResult($result);
+  $items = calculateData($items);
+  saveItems($items);
 
   return true;
 }
@@ -109,31 +122,69 @@ function getData($itemID)
 }
 
 // do the math
-function calculateData($resultobject)
+function calculateData($items)
 {
   $newobject = new StdClass();
-  $id = $resultobject->item->id;
+  //$id = $items->item->id;
 
-  switch($id)
+  foreach($items as $item)
   {
-    case 4151:
-      //$newarray[$id] = $resultarray;
-      break;
+    switch($item->id)
+    {
+      case 4151:
+        //$newprice = $items->$id->current->price + $items->item4131->current->price;
+        break;
 
-    case 4131:
-      //$newarray[$id] = $resultarray;
-      break;
+      case 4131:
+        //$newarray[$id] = $resultarray;
+        break;
 
-    default:
-      //$newarray[$id] = $resultarray;
-      break;
+      default:
+        //$newarray[$id] = $resultarray;
+        break;
+    }
   }
 
-  return $resultobject;
+  return $items;
+}
+
+function price2Int($item)
+{
+  $price = $item->item->current->price;
+
+  if(strpos($price, 'k'))
+  {
+    if(strpos($price, '.') || strpos($price, ','))
+    {
+      $item->item->current->price = str_replace('k', '00', $item->item->current->price);
+    }
+    else
+    {
+      $item->item->current->price = str_replace('k', '000', $item->item->current->price);
+    }
+  }
+  elseif(strpos($price, 'm'))
+  {
+    if(strpos($price, '.') || strpos($price, ','))
+    {
+      $item->item->current->price = str_replace('m', '00000', $item->item->current->price);
+    }
+    else
+    {
+      $item->item->current->price = str_replace('m', '000000', $item->item->current->price);
+    }
+  }
+
+  $item->item->current->price = str_replace('.', '', $item->item->current->price);
+  $item->item->current->price = str_replace(',', '', $item->item->current->price);
+
+  $item->item->current->price = intval($item->item->current->price);
+
+  return $item;
 }
 
 // store data
-function saveResult($result)
+function saveItems($result)
 {
   $jsonresult = json_encode($result, JSON_PRETTY_PRINT);
   global $file;
