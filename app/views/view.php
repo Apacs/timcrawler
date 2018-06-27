@@ -1,6 +1,5 @@
 <?php
 
-// test
 class view
 {
     function __construct()
